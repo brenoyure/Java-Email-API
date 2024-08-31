@@ -1,7 +1,5 @@
 package br.albatross.apis.email;
 
-import java.io.File;
-
 public class EmailImpl implements Email {
 
     private static final long serialVersionUID = 1L;
@@ -10,7 +8,7 @@ public class EmailImpl implements Email {
 
     private String corpoDaMensagem;
 
-    private File[] anexos;
+    private Anexo[] anexos;
 
     private DadosDoEnvio dadosDoEnvio;
 
@@ -34,11 +32,11 @@ public class EmailImpl implements Email {
         this.corpoDaMensagem = corpoDaMensagem;
     }
 
-    public File[] getAnexos() {
+    public Anexo[] getAnexos() {
         return anexos;
     }
 
-    public void setAnexos(File[] anexos) {
+    public void setAnexos(Anexo[] anexos) {
         this.anexos = anexos;
     }
 

@@ -1,6 +1,5 @@
 package br.albatross.apis.email;
 
-import java.io.File;
 import java.io.Serializable;
 
 import jakarta.validation.constraints.NotBlank;
@@ -17,9 +16,9 @@ public interface Email extends Serializable {
 
 	/**
 	 * 
-	 * @return O(s) anexo(s) do e-mail (<strong>Não</strong> podendo ficar nulo ou vazio).
+	 * @return O(s) anexo(s) do e-mail.
 	 */
-	File[] getAnexos();
+	Anexo[] getAnexos();
 
 	/**
 	 * 
@@ -45,18 +44,18 @@ public interface Email extends Serializable {
 	 * 
 	 * Define o(s) anexo(s) do e-mail (<strong>Não</strong> podendo ficar nulo ou vazio).
 	 */
-	void setAnexos(File[] anexos);
+	void setAnexos(Anexo[] anexos);
 
 	/**
 	 * 
 	 * Define o corpo da mensagem do e-mail (<strong>Não</strong> podendo ficar em branco).
 	 */
-	void setCorpoDaMensagem(String corpoDaMensagem);
+	void setCorpoDaMensagem(@NotBlank String corpoDaMensagem);
 
 	/**
 	 * 
 	 * Define os Dados do Envio (como remetente, destinatário...) do e-mail (<strong>Não</strong> podendo ficar nulo).
 	 */
-	void setDadosDoEnvio(DadosDoEnvio dadosDoEnvio);
+	void setDadosDoEnvio(@NotNull DadosDoEnvio dadosDoEnvio);
 
 }
