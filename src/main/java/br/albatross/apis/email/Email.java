@@ -1,61 +1,103 @@
 package br.albatross.apis.email;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+public class Email implements Serializable {
 
-public interface Email extends Serializable {
-
-	/**
-	 * 
-	 * @return O assunto do e-mail (<strong>Não</strong> podendo ficar em branco).
-	 */
-    @NotBlank
-	String getAssunto();
+    private static final long serialVersionUID = 1L;
 
 	/**
 	 * 
-	 * @return O(s) anexo(s) do e-mail.
+	 * O assunto do e-mail (<strong>Não</strong> podendo ficar em branco).
 	 */
-	Anexo[] getAnexos();
+    private String assunto;
 
 	/**
 	 * 
-	 * @return O corpo da mensagem do e-mail (<strong>Não</strong> podendo ficar em branco).
+	 * O corpo da mensagem do e-mail (<strong>Não</strong> podendo ficar em branco).
 	 */
-	@NotBlank
-	String getCorpoDaMensagem();
+    private String corpoDaMensagem;
 
 	/**
 	 * 
-	 * @return Os Dados do Envio (como remetente, destinatário...) do e-mail (<strong>Não</strong> pode ficar nulo).
+	 * O(s) anexo(s) do e-mail.
 	 */
-	@NotNull
-	DadosDoEnvio getDadosDoEnvio();
-	
-	/**
-	 * 
-	 * Define assunto do e-mail (<strong>Não</strong> podendo ficar em branco).
-	 */
-	void setAssunto(@NotBlank String assunto);
+    private Set<Anexo> anexos = new HashSet<>();
 
 	/**
 	 * 
-	 * Define o(s) anexo(s) do e-mail (<strong>Não</strong> podendo ficar nulo ou vazio).
+	 * Os Dados do Envio (como remetente, destinatário...) do e-mail (<strong>Não</strong> pode ficar nulo).
 	 */
-	void setAnexos(Anexo[] anexos);
+    private DadosDoEnvio dadosDoEnvio;
 
-	/**
-	 * 
-	 * Define o corpo da mensagem do e-mail (<strong>Não</strong> podendo ficar em branco).
-	 */
-	void setCorpoDaMensagem(@NotBlank String corpoDaMensagem);
+    public Email() {
 
-	/**
-	 * 
-	 * Define os Dados do Envio (como remetente, destinatário...) do e-mail (<strong>Não</strong> podendo ficar nulo).
-	 */
-	void setDadosDoEnvio(@NotNull DadosDoEnvio dadosDoEnvio);
+    }
+
+    public Email(DadosDoEnvio dadosDoEnvio) {
+        this.dadosDoEnvio = dadosDoEnvio;
+    }
+
+    public Email(String assunto, String corpoDaMensagem, Set<Anexo> anexos, DadosDoEnvio dadosDoEnvio) {
+        this.assunto = assunto;
+        this.corpoDaMensagem = corpoDaMensagem;
+        this.anexos = anexos;
+        this.dadosDoEnvio = dadosDoEnvio;
+    }
+
+    public void adicionarAnexo(Anexo anexo) {
+        this.anexos.add(anexo);
+    }
+
+    public void adicionarAnexo(File file) throws IOException {
+        try (InputStream fileInputStream = new BufferedInputStream(new FileInputStream(file))) {
+            Anexo anexo = new Anexo(file.getName(), fileInputStream.readAllBytes());
+            this.anexos.add(anexo);
+        }
+    }
+
+    public void adicionarAnexo(String nomeDoArquivo, InputStream inputStream) throws IOException {
+        Anexo anexo = new Anexo(nomeDoArquivo, inputStream.readAllBytes());
+        this.anexos.add(anexo);
+    }
+
+    public String getAssunto() {
+        return assunto;
+    }
+
+    public void setAssunto(String assunto) {
+        this.assunto = assunto;
+    }
+
+    public String getCorpoDaMensagem() {
+        return corpoDaMensagem;
+    }
+
+    public void setCorpoDaMensagem(String corpoDaMensagem) {
+        this.corpoDaMensagem = corpoDaMensagem;
+    }
+
+    public Set<Anexo> getAnexos() {
+        return anexos;
+    }
+
+    public void setAnexos(Set<Anexo> anexos) {
+        this.anexos = anexos;
+    }
+
+    public DadosDoEnvio getDadosDoEnvio() {
+        return dadosDoEnvio;
+    }
+
+    public void setDadosDoEnvio(DadosDoEnvio dadosDoEnvio) {
+        this.dadosDoEnvio = dadosDoEnvio;
+    }
 
 }

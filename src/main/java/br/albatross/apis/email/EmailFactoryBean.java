@@ -12,7 +12,7 @@ import jakarta.enterprise.context.RequestScoped;
 public class EmailFactoryBean {
 
     public Email newInstance() {
-        return new EmailImpl(new EmailDadosDoEnvioImpl());
+        return new Email(new DadosDoEnvio());
     }
 
 }

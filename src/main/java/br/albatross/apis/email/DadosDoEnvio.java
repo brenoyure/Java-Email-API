@@ -2,53 +2,77 @@ package br.albatross.apis.email;
 
 import java.io.Serializable;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-
 /**
- * Representa os dados de envio de um e-mail.
+ * Representa os dados do envio (como remetente, destinatário...) do e-mail (<strong>Não</strong> pode ficar nulo).
  */
-public interface DadosDoEnvio extends Serializable {
+public class DadosDoEnvio implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
 	/**
 	 * 
-	 * @return O Remetente <strong>(FROM)</strong> do e-mail (<strong>Não</strong> podendo ficar em branco).
+	 * O Remetente <strong>(FROM)</strong> do e-mail (<strong>Não</strong> podendo ficar em branco).
 	 */
-    @NotBlank @Email
-	String getRemetente();
+    private String remetente;
 
 	/**
 	 * 
-	 * @return O Destinatário <strong>(TO)</strong> do e-mail, podendo ser um ou vários. 
+	 * O Destinatário <strong>(TO)</strong> do e-mail, podendo ser um ou vários. 
 	 * 
 	 * (<strong>Não</strong> podendo ficar em branco).
 	 */
-    
-    @NotBlank
-	String getDestinatario();
+    private String destinatario;
 
 	/**
 	 * 
-	 * @return (Opcional) Os contatos (e-mails) que receberão cópia <strong>(CC)</strong> deste e-mail.
+	 * (Opcional) Os contatos (e-mails) que receberão cópia <strong>(CC)</strong> deste e-mail.
 	 */
-	String getCopiaPara();
+    private String copiaPara;
+
+    public DadosDoEnvio() {
+
+    }
+
+    public DadosDoEnvio(String remetente, String destinatario, String copiaPara) {
+        this.remetente = remetente;
+        this.destinatario = destinatario;
+        this.copiaPara = copiaPara;
+    }
 
 	/**
 	 * 
 	 * Define o Remetente <strong>(FROM)</strong> do e-mail (<strong>Não</strong> podendo ficar em branco).
 	 */
-	void setRemetente(@NotBlank @Email String remetente);
+    public void setRemetente(String remetente) {
+        this.remetente = remetente;
+    }
 
 	/**
 	 * <p>Define o Destinatário <strong>(TO)</strong> do e-mail, podendo ser um ou vários.</p>
 	 * exemplo: destinatario1@email.br ou destinatario1@email.br, destinatario2@email.br, destinatario3@email.br... 
 	 */
-	void setDestinatario(@NotBlank String destinatario);
+    public void setDestinatario(String destinatario) {
+        this.destinatario = destinatario;
+    }
 
 	/**
 	 * (Opcional) Define os contatos (e-mails) que receberão cópia <strong>(CC)</strong> deste e-mail.
 	 * @param copiaPara
 	 */
-	void setCopiaPara(String copiaPara);
+    public void setCopiaPara(String copiaPara) {
+        this.copiaPara = copiaPara;
+    }
+
+    public String getRemetente() {
+        return remetente;
+    }
+
+    public String getDestinatario() {
+        return destinatario;
+    }
+
+    public String getCopiaPara() {
+        return copiaPara;
+    }
 
 }

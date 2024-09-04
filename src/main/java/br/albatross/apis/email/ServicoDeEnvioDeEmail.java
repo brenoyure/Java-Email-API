@@ -21,7 +21,7 @@ public class ServicoDeEnvioDeEmail {
 
 	public void enviar(Email email, Session session) {
 		try {
-			Message mensagem = builder.buildMessage(email, session);
+			Message mensagem = builder.createMessage(email, session);
 			Transport.send(mensagem);
 		}
            catch (IOException e)        { throw new RuntimeException(e); }

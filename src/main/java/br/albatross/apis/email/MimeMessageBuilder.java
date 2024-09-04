@@ -3,14 +3,9 @@ package br.albatross.apis.email;
 import static jakarta.mail.Message.RecipientType.CC;
 import static jakarta.mail.Message.RecipientType.TO;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 
 import jakarta.enterprise.context.RequestScoped;
-import jakarta.mail.BodyPart;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
@@ -21,9 +16,7 @@ import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
 
 /**
- * <p>Responsável por criar um <code>Message</code> a partir de um <code>Tipo</code> e um Session fornecido.</p>
- * <p>Esta interface pode ser utilizada na camada de negócio da aplicação para criar um Message a partir de um <code>Tipo</code> fornecido</p>
- * @param <T> o tipo do e-mail
+ * <p>Responsável por criar um <code>MimeMessage</code> do Jakarta (Java) Mail a partir de um Session fornecido.</p>
  */
 @RequestScoped
 public class MimeMessageBuilder {
@@ -38,17 +31,17 @@ public class MimeMessageBuilder {
      * @throws AddressException
      * @throws MessagingException
      */
-	public Message buildMessage(Email email, Session session) throws IOException, MessagingException {
-		Message mensagem = new MimeMessage(session);
-		setMessageDeliveryAndRecipientData(mensagem, email);
+	public Message createMessage(Email email, Session session) throws IOException, MessagingException {
 
-		mensagem.setSubject(email.getAssunto());
-		mensagem.setContent(new MimeMultipart(buildBodyParts(email)));
+		Message message = new MimeMessage(session);
+		setMessageDeliveryAndRecipientData(message, email);
+		message.setSubject(email.getAssunto());
+        message.setContent(buildMultiPart(email));
 
-		return mensagem;
+		return message;
 
 	}
-	
+
     private void setMessageDeliveryAndRecipientData(Message message, Email email) throws AddressException, MessagingException {
         message.setFrom(new InternetAddress(email.getDadosDoEnvio().getRemetente()));
         message.setRecipients(TO, InternetAddress.parse(email.getDadosDoEnvio().getDestinatario()));
@@ -60,38 +53,22 @@ public class MimeMessageBuilder {
         }
     }
 
-    private BodyPart[] buildBodyParts(Email email) throws IOException, MessagingException {
+    private MimeMultipart buildMultiPart(Email email) throws IOException, MessagingException {
 
-        Anexo[] anexos = email.getAnexos();
-        int bodyPartsCount = (email.getAnexos() == null || anexos.length == 0) ? 1 : anexos.length + 1;
-        boolean possuiAnexos = bodyPartsCount > 1;
+        MimeMultipart multiPart = new MimeMultipart();
 
-        MimeBodyPart[] parts = new MimeBodyPart[bodyPartsCount];
-
-        if (possuiAnexos) {
-
-            for (int i = 0; i < anexos.length; i++) {
-                Anexo anexo = anexos[i];
-                var anexoBodypart = new MimeBodyPart();
-                File anexoFile = new File(anexo.getNome());
-                anexoFile.createNewFile();
-
-                try (OutputStream os = new BufferedOutputStream(new FileOutputStream(anexoFile))) {
-                    os.write(anexo.getArquivo());
-                    anexoBodypart.attachFile(anexoFile);
-                    parts[i] = anexoBodypart;
-                }
-
-            }
-
+        for (Anexo anexo : email.getAnexos()) {
+            MimeBodyPart bodyPart = new MimeBodyPart();
+            bodyPart.attachFile(anexo.toFile());
+            multiPart.addBodyPart(bodyPart);
         }
 
-        var textBodyPart = new MimeBodyPart();
+        MimeBodyPart textBodyPart = new MimeBodyPart();
         textBodyPart.setText(email.getCorpoDaMensagem());
-        parts[bodyPartsCount - 1] = textBodyPart;
+        multiPart.addBodyPart(textBodyPart);
 
-        return parts;
+        return multiPart;
 
-    }    
+    }
 
 }
