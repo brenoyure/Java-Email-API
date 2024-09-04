@@ -43,12 +43,12 @@ public class MimeMessageBuilder {
 	}
 
     private void setMessageDeliveryAndRecipientData(Message message, Email email) throws AddressException, MessagingException {
-        message.setFrom(new InternetAddress(email.getDadosDoEnvio().getRemetente()));
-        message.setRecipients(TO, InternetAddress.parse(email.getDadosDoEnvio().getDestinatario()));
+        message.setFrom(new InternetAddress(email.getRemetente()));
+        message.setRecipients(TO, InternetAddress.parse(email.getDestinatario()));
 
-        if (email.getDadosDoEnvio().getCopiaPara() != null) {
-            if (!email.getDadosDoEnvio().getCopiaPara().isBlank()) {
-                message.setRecipients(CC, InternetAddress.parse(email.getDadosDoEnvio().getCopiaPara()));
+        if (email.getCopiaPara() != null) {
+            if (!email.getCopiaPara().isBlank()) {
+                message.setRecipients(CC, InternetAddress.parse(email.getCopiaPara()));
             }
         }
     }

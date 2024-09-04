@@ -2,7 +2,7 @@ package br.albatross.apis.email;
 
 import java.io.IOException;
 
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
@@ -13,7 +13,7 @@ import jakarta.mail.internet.AddressException;
 /**
  * Responsável por enviar emails de uma dada <code>Session</code>.
  */
-@RequestScoped
+@Stateless
 public class ServicoDeEnvioDeEmail {
 
 	@Inject

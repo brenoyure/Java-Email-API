@@ -9,6 +9,10 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.enterprise.context.Dependent;
+import jakarta.validation.constraints.NotBlank;
+
+@Dependent
 public class Email implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -17,12 +21,14 @@ public class Email implements Serializable {
 	 * 
 	 * O assunto do e-mail (<strong>Não</strong> podendo ficar em branco).
 	 */
+    @NotBlank
     private String assunto;
 
 	/**
 	 * 
 	 * O corpo da mensagem do e-mail (<strong>Não</strong> podendo ficar em branco).
 	 */
+    @NotBlank
     private String corpoDaMensagem;
 
 	/**
@@ -31,25 +37,30 @@ public class Email implements Serializable {
 	 */
     private Set<Anexo> anexos = new HashSet<>();
 
-	/**
-	 * 
-	 * Os Dados do Envio (como remetente, destinatário...) do e-mail (<strong>Não</strong> pode ficar nulo).
-	 */
-    private DadosDoEnvio dadosDoEnvio;
+    /**
+     *
+     * O Remetente <strong>(FROM)</strong> do e-mail (<strong>Não</strong> podendo ficar em branco).
+     */
+    @NotBlank @jakarta.validation.constraints.Email
+    private String remetente;
+
+    /**
+     *
+     * O Destinatário <strong>(TO)</strong> do e-mail, podendo ser um ou vários.
+     *
+     * (<strong>Não</strong> podendo ficar em branco).
+     */
+    @NotBlank
+    private String destinatario;
+
+    /**
+     *
+     * (Opcional) Os contatos (e-mails) que receberão cópia <strong>(CC)</strong> deste e-mail.
+     */
+    private String copiaPara;
 
     public Email() {
 
-    }
-
-    public Email(DadosDoEnvio dadosDoEnvio) {
-        this.dadosDoEnvio = dadosDoEnvio;
-    }
-
-    public Email(String assunto, String corpoDaMensagem, Set<Anexo> anexos, DadosDoEnvio dadosDoEnvio) {
-        this.assunto = assunto;
-        this.corpoDaMensagem = corpoDaMensagem;
-        this.anexos = anexos;
-        this.dadosDoEnvio = dadosDoEnvio;
     }
 
     public void adicionarAnexo(Anexo anexo) {
@@ -92,12 +103,28 @@ public class Email implements Serializable {
         this.anexos = anexos;
     }
 
-    public DadosDoEnvio getDadosDoEnvio() {
-        return dadosDoEnvio;
+    public String getRemetente() {
+        return remetente;
     }
 
-    public void setDadosDoEnvio(DadosDoEnvio dadosDoEnvio) {
-        this.dadosDoEnvio = dadosDoEnvio;
+    public void setRemetente(String remetente) {
+        this.remetente = remetente;
+    }
+
+    public String getDestinatario() {
+        return destinatario;
+    }
+
+    public void setDestinatario(String destinatario) {
+        this.destinatario = destinatario;
+    }
+
+    public String getCopiaPara() {
+        return copiaPara;
+    }
+
+    public void setCopiaPara(String copiaPara) {
+        this.copiaPara = copiaPara;
     }
 
 }
