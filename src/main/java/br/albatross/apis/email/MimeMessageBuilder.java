@@ -5,7 +5,7 @@ import static jakarta.mail.Message.RecipientType.TO;
 
 import java.io.IOException;
 
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.ejb.Stateless;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
@@ -18,7 +18,7 @@ import jakarta.mail.internet.MimeMultipart;
 /**
  * <p>Responsável por criar um <code>MimeMessage</code> do Jakarta (Java) Mail a partir de um Session fornecido.</p>
  */
-@RequestScoped
+@Stateless
 public class MimeMessageBuilder {
 
     /**
